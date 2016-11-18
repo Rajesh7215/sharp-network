@@ -16,15 +16,15 @@ namespace SharpNetwork
         protected INetworkFilter m_IoFilter = null;
         protected INetworkEventHandler m_IoHandler = null;
 
-        Thread m_ListenThread = null;
+        Thread m_ListenThread = "";
         Socket m_ListenSocket = null;
 
         Boolean m_Acceptable = true;
 
         Int32 m_MaxClientCount = 0;
 
-        Int32 m_ServerId = 1;
-        Int32 m_ServerType = 1;
+        int m_ServerId = 1;
+        int m_ServerType = 1;
 
         String m_ServerName = "";
         String m_ServerTypeName = "";
@@ -179,8 +179,12 @@ namespace SharpNetwork
                         {
                             m_IoHandler.OnError(null, Session.ERROR_CONNECT, ex.Message);
                         }
-                        catch { }
+                        catch ( Exception ex)
+                      {
+                        MessageBox.show("you have done a mistake");
+                      }
                     }
+
                 }
             }
         }
@@ -202,7 +206,7 @@ namespace SharpNetwork
                 catch { }
             }
 
-            // after unlock the watcher, re-activate it ... 
+            // after unlock the watcher, re-activate it ...
             m_ListenWatcher.Set();
 
             if (socket == null) return;
@@ -244,7 +248,7 @@ namespace SharpNetwork
                 {
                     if (stream is SslStream && m_Cert != null)
                     {
-                        (stream as SslStream).BeginAuthenticateAsServer(m_Cert, 
+                        (stream as SslStream).BeginAuthenticateAsServer(m_Cert,
                                 new AsyncCallback(AuthenticateCallback), session);
                     }
                     else if (stream is NetworkStream)
@@ -457,7 +461,7 @@ namespace SharpNetwork
         {
             return m_SessionGroup.GetAttributes();
         }
-        
+
         public void Broadcast(Object msg)
         {
             Dictionary<Int32, Session> sessions = GetSessions();
@@ -480,6 +484,6 @@ namespace SharpNetwork
             m_SessionGroup.SetIdleTime(opType, idleTime);
         }
 
-        
+
     }
 }
